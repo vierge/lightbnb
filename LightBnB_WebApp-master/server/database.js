@@ -1,5 +1,13 @@
+const { Pool } = require('pg');
 const properties = require('./json/properties.json');
 const users = require('./json/users.json');
+
+const pool = new Pool({
+  user:'vagrant',
+  password:'123',
+  host:'localhost',
+  database:'lightbnb'
+});
 
 /// Users
 
@@ -66,13 +74,28 @@ exports.getAllReservations = getAllReservations;
  * @param {*} limit The number of results to return.
  * @return {Promise<[{}]>}  A promise to the properties.
  */
-const getAllProperties = function(options, limit = 10) {
-  const limitedProperties = {};
-  for (let i = 1; i <= limit; i++) {
-    limitedProperties[i] = properties[i];
-  }
-  return Promise.resolve(limitedProperties);
+const getAllProperties = function(options, limit = 10) { 
+  
+  const values = [`${limit}`];
+  const queryString = `
+    SELECT id, name, city FROM properties
+    LIMIT $1
+  `;
+
+  query.pool(queryString, values)
+  .then(res => {
+    res.rows.forEach(properties => {
+      console.log(`property ${properties.id} : ${properties.name} : Located in ${properties.city}`);
+    });
+  })
+  .catch(err => console.log('QUERY FAILED.', err.stack));
+  
 }
+// const limitedProperties = {};
+// for (let i = 1; i <= limit; i++) {
+//   limitedProperties[i] = properties[i];
+// }
+// return Promise.resolve(limitedProperties);
 exports.getAllProperties = getAllProperties;
 
 
