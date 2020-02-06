@@ -8,6 +8,10 @@ const express = require('express');
 const cookieSession = require('cookie-session');
 const bodyParser = require('body-parser');
 
+// CUSTOM
+
+const browserSync = require('browser-sync');
+
 const app = express();
 
 app.use(cookieSession({
@@ -34,5 +38,17 @@ app.get("/test", (req, res) => {
   res.send("🤗");
 });
 
-const port = process.env.PORT || 3000; 
-app.listen(port, (err) => console.log(err || `listening on port ${port} 😎`));
+const port = process.env.PORT || 8080; 
+app.listen(port, (err) => {
+  browserSync({
+    open: false,
+    proxy: 'http://localhost:' + port,
+    files: ["public/**/*.*"],
+    injectChanges: true,
+    watchOptions: {
+      usePolling: true
+    },
+    notify: true
+  });
+  console.log(`Now listening on port ${port} ✨`);
+});

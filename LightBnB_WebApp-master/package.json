@@ -18,5 +18,8 @@
     "express": "^4.17.1",
     "nodemon": "^1.19.1",
     "pg": "^7.18.1"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.7"
   }
 }
