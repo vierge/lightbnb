@@ -78,14 +78,14 @@ const getAllProperties = function(options, limit = 10) {
   
   const values = [`${limit}`];
   const queryString = `
-    SELECT id, name, city FROM properties
+    SELECT id, title, city FROM properties
     LIMIT $1
   `;
 
-  query.pool(queryString, values)
+  pool.query(queryString, values)
   .then(res => {
     res.rows.forEach(properties => {
-      console.log(`property ${properties.id} : ${properties.name} : Located in ${properties.city}`);
+      console.log(`property ${properties.id} : ${properties.title} : Located in ${properties.city}`);
     });
   })
   .catch(err => console.log('QUERY FAILED.', err.stack));
