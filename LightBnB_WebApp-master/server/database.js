@@ -78,16 +78,14 @@ const getAllProperties = function(options, limit = 10) {
   
   const values = [`${limit}`];
   const queryString = `
-    SELECT id, title, city FROM properties
+    SELECT *, avg(property_reviews.rating) as average_rating FROM properties
+    JOIN property_reviews ON property_id = properties.id
+    GROUP BY property_reviews.id, properties.id
     LIMIT $1
   `;
 
-  pool.query(queryString, values)
-  .then(res => {
-    res.rows.forEach(properties => {
-      console.log(`property ${properties.id} : ${properties.title} : Located in ${properties.city}`);
-    });
-  })
+  return pool.query(queryString, values)
+  .then(res => res.rows)
   .catch(err => console.log('QUERY FAILED.', err.stack));
   
 }
