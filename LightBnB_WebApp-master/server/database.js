@@ -24,21 +24,10 @@ const getUserWithEmail = function(email) {
   `
   return pool.query(queryString, [`${email}`])
   .then(res => {
-    res.rows
-    console.log(res.rows);
+    console.log(res.rows[0]);
+    return res.rows[0];
   })
   .catch(err => console.log('cannot find user!', err.stack));
-
-  // let user;
-  // for (const userId in users) {
-  //   user = users[userId];
-  //   if (user.email.toLowerCase() === email.toLowerCase()) {
-  //     break;
-  //   } else {
-  //     user = null;
-  //   }
-  // }
-  // return Promise.resolve(user);
 }
 exports.getUserWithEmail = getUserWithEmail;
 
@@ -54,8 +43,8 @@ const getUserWithId = function(id) {
   `
   return pool.query(queryString, [`${id}`])
   .then(res => {
-    res.rows
-    console.log(res.rows);
+    console.log(res.rows[0]);
+    return res.rows[0];
   })
   .catch(err => console.log('cannot find user!', err.stack));
 }
@@ -97,7 +86,24 @@ exports.addUser = addUser;
  * @return {Promise<[{}]>} A promise to the reservations.
  */
 const getAllReservations = function(guest_id, limit = 10) {
-  return getAllProperties(null, 2);
+  queryString = `
+  SELECT reservations.*, properties.*, avg(property_reviews.rating) 
+  FROM reservations
+  JOIN properties ON reservations.property_id = properties.id
+  JOIN property_reviews ON property_reviews.property_id = properties.id
+  WHERE reservations.guest_id = $1
+  AND end_date < now()::date
+  GROUP BY properties.id, reservations.id
+  ORDER BY start_date ASC
+  LIMIT $2;
+  `
+  return pool.query(queryString, [`${guest_id}`, `${limit}`])
+  .then(res => {
+    console.log(res.rows);
+    return res.rows
+  })
+  .catch(err => console.log('QUERY FAILED.', err.stack));
+
 }
 exports.getAllReservations = getAllReservations;
 

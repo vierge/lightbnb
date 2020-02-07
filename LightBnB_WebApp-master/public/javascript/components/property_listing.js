@@ -1,6 +1,5 @@
 $(() => {
   window.propertyListing = {};
-  
   function createListing(property, isReservation) {
     return `
     <article class="property-listing">
@@ -21,11 +20,21 @@ $(() => {
             <div class="property-listing__rating">${Math.round(property.average_rating * 100) / 100}/5 stars</div>
             <div class="property-listing__price">$${property.cost_per_night/100.0}/night</div>
           </footer>
+          <form class="reservationForm hidden" action="#" method="POST">
+            <input type="date" name="start_date" id="start_date">
+            <input type="date" name="end_date" id="end_date">
+            <button type="submit">submit reservation!</button>
+            <input type="button" value="cancel!" class="formReset" />
+            </form>
+            <input type="button" value="Make A Reservation" class="resoMaker" />
         </section>
       </article>
     `
   }
 
+  // $('.resoMaker, .').onclick(function() {
+  //   $('.reservationForm, .formReset').toggleClass('hidden');
+  // });
   window.propertyListing.createListing = createListing;
 
 });
