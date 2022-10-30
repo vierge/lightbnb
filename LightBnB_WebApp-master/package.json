@@ -20,6 +20,6 @@
     "pg": "^7.18.1"
   },
   "devDependencies": {
-    "browser-sync": "^2.26.7"
+    "browser-sync": "^2.27.10"
   }
 }
